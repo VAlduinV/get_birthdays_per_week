@@ -31,6 +31,17 @@ def get_birthdays_per_week(users):
     for day_num, user_list in birthdays_by_day.items():
         # get the day name
         day_name = calendar.day_name[day_num]
+        if day_name == calendar.day_name[5] or calendar.day_name[6]:
+            day_name = calendar.day_name[0]
         # format and print users
-        print('{}: {}'.format(day_name, ', '.join(user_list)))
+            print('{}: {}'.format(day_name, ', '.join(user_list)))
 
+
+test_list = [
+            {'name': 'Bill', 'birthday': datetime.datetime(2020, 8, 3)},
+            {'name': 'Jill', 'birthday': datetime.datetime(2020, 8, 7)},
+            {'name': 'Kim', 'birthday': datetime.datetime(2020, 8, 8)},
+            {'name': 'Jan', 'birthday': datetime.datetime(2020, 8, 10)},
+            ]
+
+get_birthdays_per_week(test_list)
