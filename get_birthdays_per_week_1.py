@@ -1,40 +1,44 @@
-import calendar
 import datetime
 
 
 def get_birthdays_per_week(users):
-    # get the current day
-    now = datetime.datetime.now()
-    # get the day of the week, 0-monday, 1-tuesday
-    day_num = now.weekday()
-    # create a dictionary to store the list of users per day
-    birthdays_by_day = dict()
+    monday = []
+    tuesday = []
+    wednesday = []
+    thursday = []
+    friday = []
+    saturday = []
+    sunday = []
+    weekdays = [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
 
-    # iterate over the users list
     for user in users:
-        # calculate the difference in days between the current day and the user's birthday
-        difference_in_days = (user['birthday'] - now).days
-        # check if the difference is between 0 and 7
-        if 0 <= difference_in_days <= 7:
-            # get the day number of the user's birthday
-            user_day_num = (user['birthday'].weekday() - day_num) % 7
-            # extract the name of the user
-            user_name = user['name']
-            # get the list of users for the user's birthday day
-            user_list = birthdays_by_day.get(user_day_num, [])
-            # add the name of the user to the list of users on the user's birthday day
-            user_list.append(user_name)
-            # update the dictionary
-            birthdays_by_day[user_day_num] = user_list
+        if user["birthday"].weekday() == 0:
+            weekdays[0].append(user["name"])
+        elif user["birthday"].weekday() == 1:
+            weekdays[1].append(user["name"])
+        elif user["birthday"].weekday() == 2:
+            weekdays[2].append(user["name"])
+        elif user["birthday"].weekday() == 3:
+            weekdays[3].append(user["name"])
+        elif user["birthday"].weekday() == 4:
+            weekdays[4].append(user["name"])
+        elif user["birthday"].weekday() == 5:
+            weekdays[5].append(user["name"])
+        elif user["birthday"].weekday() == 6:
+            weekdays[6].append(user["name"])
 
-    # loop over days
-    for day_num, user_list in birthdays_by_day.items():
-        # get the day name
-        day_name = calendar.day_name[day_num]
-        if day_name == calendar.day_name[5] or calendar.day_name[6]:
-            day_name = calendar.day_name[0]
-        # format and print users
-            print('{}: {}'.format(day_name, ', '.join(user_list)))
+    for i in range(7):
+        if i == 0:
+            print("Monday:")
+            if weekdays[i]:
+                if len(weekdays[i]) == 1:
+                    print(weekdays[i][0])
+                else:
+                    for j in range(len(weekdays[i])):
+                        if j == len(weekdays[i]) - 1:
+                            print(weekdays[i][j], end="")
+                        else:
+                            print(weekdays[i][j])
 
 
 test_list = [
