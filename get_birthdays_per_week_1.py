@@ -1,51 +1,41 @@
-import datetime
+from datetime import datetime, timedelta
 
 
 def get_birthdays_per_week(users):
-    monday = []
-    tuesday = []
-    wednesday = []
-    thursday = []
-    friday = []
-    saturday = []
-    sunday = []
-    weekdays = [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+    # визначаємо поточну дату
+    today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    # знаходимо дату понеділка в поточному тижні
+    monday = today - timedelta(days=today.weekday())
+
+    # створюємо словник, де ключі - дні тижня, значення - список ім'янинників
+    birthdays_per_day = {monday + timedelta(days=i): [] for i in range(7)}
 
     for user in users:
-        if user["birthday"].weekday() == 0:
-            weekdays[0].append(user["name"])
-        elif user["birthday"].weekday() == 1:
-            weekdays[1].append(user["name"])
-        elif user["birthday"].weekday() == 2:
-            weekdays[2].append(user["name"])
-        elif user["birthday"].weekday() == 3:
-            weekdays[3].append(user["name"])
-        elif user["birthday"].weekday() == 4:
-            weekdays[4].append(user["name"])
-        elif user["birthday"].weekday() == 5:
-            weekdays[5].append(user["name"])
-        elif user["birthday"].weekday() == 6:
-            weekdays[6].append(user["name"])
+        name = user['name']
+        birthday = user['birthday']
+        birthday_date = datetime(birthday.year, birthday.month, birthday.day)
 
-    for i in range(7):
-        if i == 0:
-            print("Monday:")
-            if weekdays[i]:
-                if len(weekdays[i]) == 1:
-                    print(weekdays[i][0])
-                else:
-                    for j in range(len(weekdays[i])):
-                        if j == len(weekdays[i]) - 1:
-                            print(weekdays[i][j], end="")
-                        else:
-                            print(weekdays[i][j])
+        # якщо день народження вже був у цьому році, додаємо користувача до списку
+        # відповідного дня тижня
+        if birthday_date < today:
+            birthday_date = datetime(today.year + 1, birthday.month, birthday.day)
+        day_of_week = birthday_date.weekday()
+        birthdays_per_day[monday + timedelta(days=day_of_week)].append(name)
+
+    # виводимо список ім'янинників по днях тижня
+    for day, names in birthdays_per_day.items():
+        if names:
+            print(day.strftime('%A') + ': ' + ', '.join(names))
 
 
-test_list = [
-            {'name': 'Bill', 'birthday': datetime.datetime(2020, 8, 3)},
-            {'name': 'Jill', 'birthday': datetime.datetime(2020, 8, 7)},
-            {'name': 'Kim', 'birthday': datetime.datetime(2020, 8, 8)},
-            {'name': 'Jan', 'birthday': datetime.datetime(2020, 8, 10)},
-            ]
+users = [
+    {'name': 'Alice', 'birthday': datetime(1990, 2, 24)},
+    {'name': 'Bob', 'birthday': datetime(1985, 2, 26)},
+    {'name': 'Charlie', 'birthday': datetime(1978, 2, 23)},
+    {'name': 'Dave', 'birthday': datetime(2000, 2, 27)},
+    {'name': 'Eve', 'birthday': datetime(1995, 2, 22)},
+    {'name': 'Frank', 'birthday': datetime(1992, 2, 29)}
+]
 
-get_birthdays_per_week(test_list)
+get_birthdays_per_week(users)
